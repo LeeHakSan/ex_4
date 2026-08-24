@@ -1,0 +1,10 @@
+[
+  {
+    "date": "2026-08-24",
+    "rate": 1384.23,
+    "unit": "KRW / 1 USD",
+    "source": "https://api.frankfurter.dev/v1/latest?base=USD&symbols=KRW",
+    "fetchedAtUtc": "2026-08-24T06:41:50.476Z",
+    "timezone": "Asia/Seoul"
+  }
+]
