@@ -9,6 +9,7 @@ const els = {
   sourceLink: document.getElementById("source-link"),
   fetchedAt: document.getElementById("fetched-at"),
   statusBadge: document.getElementById("status-badge"),
+  sourceDate: document.getElementById("source-date"),
   retryBtn: document.getElementById("retry-btn"),
   historyBody: document.getElementById("history-body"),
   compareResult: document.getElementById("compare-result"),
@@ -109,6 +110,7 @@ async function fetchRate(faultMode) {
     value: rate,
     unit: "KRW / 1 USD",
     source: API_URL,
+    sourceDate: data.date, // 출처(ECB) 자체가 매긴 환율 기준일 — 우리가 기록한 조회 시각과는 다른 시각
     fetchedAtISO: new Date().toISOString(),
   };
 }
@@ -123,6 +125,7 @@ function renderGood(data) {
   els.unit.textContent = data.unit;
   els.sourceLink.href = data.source;
   els.sourceLink.textContent = data.source;
+  els.sourceDate.textContent = data.sourceDate || "-";
   els.fetchedAt.textContent = formatKST(data.fetchedAtISO) + " (KST)";
   setBadge("ok", "정상");
 }
@@ -133,6 +136,7 @@ function renderStale(lastGood, faultMessage) {
     els.unit.textContent = lastGood.unit;
     els.sourceLink.href = lastGood.source;
     els.sourceLink.textContent = lastGood.source;
+    els.sourceDate.textContent = lastGood.sourceDate || "-";
     els.fetchedAt.textContent = formatKST(lastGood.fetchedAtISO) + " (KST, 마지막 정상 조회)";
     setBadge("stale", `오래된 데이터 — ${faultMessage}`);
   } else {
@@ -140,14 +144,15 @@ function renderStale(lastGood, faultMessage) {
     els.unit.textContent = "";
     els.sourceLink.href = API_URL;
     els.sourceLink.textContent = API_URL;
+    els.sourceDate.textContent = "-";
     els.fetchedAt.textContent = "-";
     setBadge("error", faultMessage);
   }
 }
 
-async function load() {
+async function load(bypassFault = false) {
   const params = new URLSearchParams(location.search);
-  const faultMode = params.get("fault");
+  const faultMode = bypassFault ? null : params.get("fault");
 
   setBadge("stale", "불러오는 중…");
   try {
@@ -160,7 +165,9 @@ async function load() {
   }
 }
 
-els.retryBtn.addEventListener("click", load);
+// 재시도는 URL의 ?fault= 모의 상태를 무시하고 실제 호출을 다시 시도한다.
+// (모의 장애 화면을 계속 보려면 링크로 재진입, 복구를 보려면 "다시 시도"를 누른다.)
+els.retryBtn.addEventListener("click", () => load(true));
 
 async function loadHistory() {
   let history = [];
@@ -176,12 +183,12 @@ async function loadHistory() {
   history.sort((a, b) => (a.date < b.date ? 1 : -1)); // 최신 날짜 먼저
 
   if (history.length === 0) {
-    els.historyBody.innerHTML = "<tr><td colspan='4'>아직 저장된 날짜별 기록이 없습니다.</td></tr>";
+    els.historyBody.innerHTML = "<tr><td colspan='5'>아직 저장된 날짜별 기록이 없습니다.</td></tr>";
   } else {
     els.historyBody.innerHTML = history
       .map(
         (h) =>
-          `<tr><td>${h.date}</td><td>${h.rate.toLocaleString("ko-KR", { maximumFractionDigits: 2 })}</td><td>${h.unit}</td><td>${formatKST(h.fetchedAtUtc)} (KST)</td></tr>`
+          `<tr><td>${h.date}</td><td>${h.rate.toLocaleString("ko-KR", { maximumFractionDigits: 2 })}</td><td>${h.unit}</td><td>${h.sourceDate || "-"}</td><td>${formatKST(h.fetchedAtUtc)} (KST)</td></tr>`
       )
       .join("");
   }
@@ -207,5 +214,5 @@ function renderCompare(historyDesc) {
     `<span class="${cls}">차이: ${diff >= 0 ? "+" : ""}${diff.toFixed(2)} ${latest.unit} (${direction})</span>`;
 }
 
-load();
+load(false);
 loadHistory();

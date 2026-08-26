@@ -35,6 +35,7 @@ async function main() {
     rate,
     unit: "KRW / 1 USD",
     source: API_URL,
+    sourceDate: data.date, // 출처(ECB)가 매긴 환율 기준일 — 우리 조회 시각과 별개
     fetchedAtUtc: new Date().toISOString(),
     timezone: TIMEZONE,
   });
