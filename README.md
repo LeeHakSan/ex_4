@@ -40,9 +40,9 @@
 
 ## 스크린샷
 
-| 정상 상태 (한 화면에 값·단위·출처·두 시각·기준 시간대·상태·날짜별 기록·어제 대비 변화) | 장애 재현 (timeout, 마지막 정상값 유지) |
-|---|---|
-| ![정상 상태 전체 화면](screenshots/01-current-normal.png) | ![시간 초과 장애 재현 — 오래된 데이터 표시](screenshots/03-fault-timeout.png) |
+| 정상 상태 (한 화면에 값·단위·출처·두 시각·기준 시간대·상태·날짜별 기록·어제 대비 변화) | 출처 링크 클릭 시 열리는 원자료(JSON) | 장애 재현 (timeout, 마지막 정상값 유지) |
+|---|---|---|
+| ![정상 상태 전체 화면](screenshots/01-current-normal.png) | ![출처 링크를 눌러 열리는 원자료 JSON 페이지](screenshots/02-source-raw-json.png) | ![시간 초과 장애 재현 — 오래된 데이터 표시](screenshots/03-fault-timeout.png) |
 
 ## 개발/배포 메모 (제출 화면에는 남기지 않음)
 
