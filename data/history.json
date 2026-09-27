@@ -303,5 +303,14 @@
     "sourceDate": "2026-09-25",
     "fetchedAtUtc": "2026-09-26T04:47:14.887Z",
     "timezone": "Asia/Seoul"
+  },
+  {
+    "date": "2026-09-27",
+    "rate": 1355.05,
+    "unit": "KRW / 1 USD",
+    "source": "https://api.frankfurter.dev/v1/latest?base=USD&symbols=KRW",
+    "sourceDate": "2026-09-25",
+    "fetchedAtUtc": "2026-09-27T05:09:48.617Z",
+    "timezone": "Asia/Seoul"
   }
 ]
